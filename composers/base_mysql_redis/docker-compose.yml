@@ -1,0 +1,94 @@
+version: "3.8"
+# All service running under similiar composer
+services:
+  dbMysql:
+    image: mysql:8.0.3
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password --init-file /data/application/init.sql
+    volumes:
+      - ./init.sql:/data/application/init.sql
+    environment:
+      MYSQL_ROOT_PASSWORD: 'changeMe'
+      MYSQL_DATABASE: 'db-project-001'
+      MYSQL_USER: 'root'
+      MYSQL_PASSWORD: 'changeMe'
+    ports:
+      - 3306:3306
+      - 33060:33060
+#  dbPostgres:
+#    image: postgres:10
+#    restart: always
+#    ports:
+#      - 5432:5432
+#    environment:
+#      POSTGRES_USER: root
+#      POSTGRES_PASSWORD: changeMe
+#      POSTGRES_DB: mydb
+#  dbMongo:
+#    image: mongo:3.6.2
+#    restart: always
+#    ports:
+#      - 27017:27017
+#    environment:
+#      MONGO_INITDB_ROOT_USERNAME: root
+#      MONGO_INITDB_ROOT_PASSWORD: changeMe
+  redis:
+    hostname: redis
+    image: redis:alpine
+    command: redis-server --requirepass changeMe
+    volumes:
+      - $PWD/redis-data:/var/lib/redis
+      - $PWD/redis.conf:/usr/local/etc/redis/redis.conf
+    environment:
+      - REDIS_REPLICATION_MODE=master
+    ports:
+      - 6379:6379
+# UI Helper to access DB
+  adminer:
+    image: dockette/adminer:latest
+    restart: always
+    ports:
+      - 8082:80
+    expose:
+      - 80
+    depends_on:
+      - dbMysql
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    restart: always
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=changeMe
+    ports:
+      - 8081:8081
+    depends_on:
+      - redis
+# Your Application service
+  appOmsSvc:
+    image: gcr.io/beda-testing-dev/oms/base-service:185ef6a-2008111032
+    restart: always
+    ports:
+      - 8080:8080
+    expose:
+      - 8080
+    environment:
+      APP_VERSION: '0.0.1-RC'
+      APP_ENV: 'development'
+      DB_HOSTNAME: 'http://dbMsq'
+      DB_PORT: '3306'
+      DB_DATABASE: 'db-project-001'
+      DB_USERNAME: 'root'
+      DB_PASSWORD: 'changeMe'
+      CACHE_HOSTNAME: 'http://redis'
+      CACHE_PORT: '6379'
+      CACHE_PASSWORD: 'changeMe'
+      SC_USERNAME: 'superman'
+      SC_PASSWORD: 'changeMe'
+      SVC_CASHIER: 'http://sameple'
+    depends_on:
+      - dbMysql
+      - redis
+
+volumes:
+  dbMysql:

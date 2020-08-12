@@ -1,0 +1,4 @@
+#!/bin/sh
+# this is to setup
+cp hooks/* .git/hooks/
+rm -rf .git/hooks/setup-standarization

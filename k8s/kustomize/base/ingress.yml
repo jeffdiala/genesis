@@ -1,0 +1,8 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: oms-ingress
+spec:
+  backend:
+    serviceName: oms-service
+    servicePort: 80

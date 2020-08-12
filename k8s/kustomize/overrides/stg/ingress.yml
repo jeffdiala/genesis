@@ -1,0 +1,6 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: oms-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: stg-base-service-ip
