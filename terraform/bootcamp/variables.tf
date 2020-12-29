@@ -36,6 +36,13 @@ variable "linux_admin_password" {
   description = "The password for the Linux admin account."
 }
 
+// SQL Variable
+
+variable "sql_name" {
+  type = string
+  description = "The name for sql database"
+}
+
 /**
 *********************************
   Outputs
