@@ -2,32 +2,48 @@ version: "3.8"
 # All service running under similar composer
 services:
   # mongodb
-  dbMongo:
-    image: mongo
+  dbmongo:
+    image: mongo:latest
     restart: always
     ports:
       - 27017:27017
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: changeMe123
+  mongo-express:
+    image: mongo-express:latest
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_SERVER: dbmongo
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: changeMe123
+    depends_on:
+      - dbmongo
 
-#  redis:
-#    hostname: redis
-#    image: redis:alpine
-#    command: redis-server --requirepass changeMe123
-#    volumes:
-#      - $PWD/redis-data:/var/lib/redis
-#      - $PWD/redis.conf:/usr/local/etc/redis/redis.conf
-#    environment:
-#      - REDIS_REPLICATION_MODE=master
-#    ports:
-#      - 6379:6379
+  redis:
+    hostname: redis
+    image: redis:alpine
+    command: redis-server --requirepass changeMe123
+    volumes:
+      - $PWD/redis-data:/var/lib/redis
+      - $PWD/redis.conf:/usr/local/etc/redis/redis.conf
+    environment:
+      - REDIS_REPLICATION_MODE=master
+    ports:
+      - 6379:6379
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    restart: always
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=changeMe123
+    ports:
+      - 8082:8081
+    depends_on:
+      - redis
 
-#  mongo-express:
-#    image: mongo-express
-#    restart: always
-#    ports:
-#      - 8085:8081
-#    environment:
-#      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-#      ME_CONFIG_MONGODB_ADMINPASSWORD: changeMe123
+
