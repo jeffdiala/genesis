@@ -65,30 +65,30 @@ services:
     depends_on:
       - redis
 # Your Application service
-  appOmsSvc:
-    image: gcr.io/beda-testing-dev/oms/base-service:185ef6a-2008111032
-    restart: always
-    ports:
-      - 8080:8080
-    expose:
-      - 8080
-    environment:
-      APP_VERSION: '0.0.1-RC'
-      APP_ENV: 'development'
-      DB_HOSTNAME: 'http://dbMsq'
-      DB_PORT: '3306'
-      DB_DATABASE: 'db-project-001'
-      DB_USERNAME: 'root'
-      DB_PASSWORD: 'changeMe123'
-      CACHE_HOSTNAME: 'http://redis'
-      CACHE_PORT: '6379'
-      CACHE_PASSWORD: 'changeMe123'
-      SC_USERNAME: 'changeMe123'
-      SC_PASSWORD: 'changeMe123'
-      SVC_CASHIER: 'http://sameple'
-    depends_on:
-      - dbMysql
-      - redis
+#  appOmsSvc:
+#    image: gcr.io/beda-testing-dev/oms/base-service:185ef6a-2008111032
+#    restart: always
+#    ports:
+#      - 8080:8080
+#    expose:
+#      - 8080
+#    environment:
+#      APP_VERSION: '0.0.1-RC'
+#      APP_ENV: 'development'
+#      DB_HOSTNAME: 'http://dbMsq'
+#      DB_PORT: '3306'
+#      DB_DATABASE: 'db-project-001'
+#      DB_USERNAME: 'root'
+#      DB_PASSWORD: 'changeMe123'
+#      CACHE_HOSTNAME: 'http://redis'
+#      CACHE_PORT: '6379'
+#      CACHE_PASSWORD: 'changeMe123'
+#      SC_USERNAME: 'changeMe123'
+#      SC_PASSWORD: 'changeMe123'
+#      SVC_CASHIER: 'http://sameple'
+#    depends_on:
+#      - dbMysql
+#      - redis
 
 volumes:
   dbMysql:
