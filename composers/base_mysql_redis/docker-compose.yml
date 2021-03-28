@@ -1,7 +1,7 @@
 version: "3.8"
 # All service running under similiar composer
 services:
-  dbMysql:
+  db_mysql:
     image: mysql:8.0.3
     restart: always
     command: --default-authentication-plugin=mysql_native_password --init-file /data/application/init.sql
@@ -15,7 +15,17 @@ services:
     ports:
       - 3306:3306
       - 33060:33060
-#  dbPostgres:
+  adminer:
+    image: dockette/adminer:latest
+    restart: always
+    ports:
+      - 8082:80
+    expose:
+      - 80
+    depends_on:
+      - db_mysql
+
+#  db_postgres:
 #    image: postgres:10
 #    restart: always
 #    ports:
@@ -24,7 +34,7 @@ services:
 #      POSTGRES_USER: root
 #      POSTGRES_PASSWORD: changeMe123
 #      POSTGRES_DB: mydb-dev
-#  dbMongo:
+#  db_mongo:
 #    image: mongo:3.6.2
 #    restart: always
 #    ports:
@@ -32,6 +42,7 @@ services:
 #    environment:
 #      MONGO_INITDB_ROOT_USERNAME: root
 #      MONGO_INITDB_ROOT_PASSWORD: changeMe123
+
   redis:
     hostname: redis
     image: redis:alpine
@@ -43,17 +54,7 @@ services:
       - REDIS_REPLICATION_MODE=master
     ports:
       - 6379:6379
-# UI Helper to access DB
-  adminer:
-    image: dockette/adminer:latest
-    restart: always
-    ports:
-      - 8082:80
-    expose:
-      - 80
-    depends_on:
-      - dbMysql
-  redis-commander:
+  redis_commander:
     image: rediscommander/redis-commander:latest
     restart: always
     environment:
@@ -64,6 +65,7 @@ services:
       - 8081:8081
     depends_on:
       - redis
+
 # Your Application service
 #  appOmsSvc:
 #    image: gcr.io/beda-testing-dev/oms/base-service:185ef6a-2008111032
@@ -87,8 +89,8 @@ services:
 #      SC_PASSWORD: 'changeMe123'
 #      SVC_CASHIER: 'http://sameple'
 #    depends_on:
-#      - dbMysql
+#      - db_mysql
 #      - redis
 
 volumes:
-  dbMysql:
+  db_mysql:
