@@ -1,6 +1,17 @@
 version: "3.8"
 # All service running under similiar composer
 services:
+#  db_postgres:
+#    image: postgres:10
+#    restart: always
+#    ports:
+#      - 5432:5432
+#    environment:
+#      POSTGRES_USER: root
+#      POSTGRES_PASSWORD: changeMe123
+#      POSTGRES_DB: mydb-dev
+
+# mysqldb and client service
   db_mysql:
     image: mysql:8.0.3
     restart: always
@@ -24,25 +35,7 @@ services:
       - 80
     depends_on:
       - db_mysql
-
-#  db_postgres:
-#    image: postgres:10
-#    restart: always
-#    ports:
-#      - 5432:5432
-#    environment:
-#      POSTGRES_USER: root
-#      POSTGRES_PASSWORD: changeMe123
-#      POSTGRES_DB: mydb-dev
-#  db_mongo:
-#    image: mongo:3.6.2
-#    restart: always
-#    ports:
-#      - 27017:27017
-#    environment:
-#      MONGO_INITDB_ROOT_USERNAME: root
-#      MONGO_INITDB_ROOT_PASSWORD: changeMe123
-
+# redis and client service
   redis:
     hostname: redis
     image: redis:alpine
